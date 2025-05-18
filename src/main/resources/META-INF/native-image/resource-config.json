@@ -1,0 +1,10 @@
+{
+  "resources": {
+    "includes": [
+      {"pattern": "application.yml"},
+      {"pattern": "application-dev.yml"},
+      {"pattern": "application-prod.yml"},
+      {"pattern": "data.sql"}
+    ]
+  }
+}

@@ -123,3 +123,68 @@ kubectl create secret generic postgres-secret \
 ----
 
 Er gibt außerdem Skripte für link:deploy-to-minikube.bat[Windows] und für link:deploy-to-minikube.sh[richtige Betriebssysteme], um die Anwendung zu bauen, in ein Docker Image und dann ein lokales Kubernetes zu packen, welches mit https://minikube.sigs.k8s.io[Minikube] zur Verfügung gestellt wird.
+
+== Native Images
+Spring Boot unterstützt in seit Version 3.x nun auch native Images zu bauen.
+
+Es gelten die gleichen Einschränkungen wie bei anderen nativen Builds. Reflektionen funktionieren zum Beispiel nicht.
+
+Ein Seiteneffekt ist auch, dass wir H2 nicht so einfach nutzen können. Da H2 sehr selten in produktiven Umgebungen zum
+Einsatz kommt, blenden wir das für diese Praxisübung einfach aus und nutzen PostgreSQL als Datenbank. Dafür nutzen wir das bereits bekannte `prod` Profil.
+
+Um ein natives Build durchzuführen, wird ein GraalVM JDK lokal benötigt. Dieses Beispiel hier habe ich mit der
+Community Edition 21.0.2 getestet.
+
+Die Installation über ASDF funktioniert einfach so:
+
+[,bash]
+.Installation über ASDF
+----
+asdf install java graalvm-community-21.0.2
+----
+
+Das Wort "Installation" ist dabei jedoch auch stark übertrieben. Eine Übersicht der Community Edition Versionen gibt es
+auf Github: https://github.com/graalvm/graalvm-ce-builds/releases/.
+
+=== Direktes Bauen des Images
+Ab diesem Tag sind alle Abhängigkeiten, die wir für den Bau benötigen, in der link:./build.gradle[build.gradle] enthalten.
+
+Unter MacOS und Linux kann dann zum Beispiel so ein natives Images erstellt werden:
+
+----
+GRAALVM_HOME=~/.asdf/installs/java/graalvm-community-21.0.2/ gradle nativeCompile
+----
+
+Im obigen Beispiel zeigt die `GRAALVM_HOME` Variable auf das Installationsziel von ASDF für die genannte Version.
+Der Pfad kann aber entsprechend angepasst werden.
+
+Unter Windows sollte unter PowerShell folgendes funktionieren:
+
+[,powershell]
+.Natives image mit GraalVM bauen
+----
+& { $env:GRAALVM_HOME = "$HOME\.asdf\installs\java\graalvm-community-21.0.2"; gradle nativeCompile }
+----
+
+Für regelmäßige Builds macht es natürlich Sinn, die Variable `GRAALVM_HOME` fest im System zu setzen.
+
+Nach dem erfolgreichen Build, befindet sich das native Image (aka: die ausführbare Datei) unter link:./build/native/nativeCompile[build/native/nativeCompile] und kann dann zum Beispiel so ausgeführt werden:
+
+.Native Anwendung unter MacOS oder Linux mit dem Profil `prod` ausführen
+----
+SPRING_PROFILES_ACTIVE=prod ./tasks-native
+----
+
+==== Vergleich der Startzeiten
+
+Der Unterschied ist signifikant. Auf meiner Entwicklungsmaschine gibt es folgende Ergebnsise:
+
+.Die native Anwendung startet in rund 0,29s:
+----
+Started TaskManagerApplication in 0.286 seconds (process running for 0.308)
+----
+
+.Die klassische Anwendung startet in rund 1,9s:
+----
+Started TaskManagerApplication in 1.886 seconds (process running for 2.083)
+----

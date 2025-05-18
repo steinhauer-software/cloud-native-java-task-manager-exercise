@@ -1,0 +1,13 @@
+[
+  {
+    "name": "software.steinhauer.schulung.cloudnative.tasks.model.Task",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "software.steinhauer.schulung.cloudnative.tasks.model.Task$Priority",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true
+  }
+]
