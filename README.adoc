@@ -17,14 +17,42 @@ Sogar unter Windows.
 
 == Wie ausführen?
 Am Einfachsten ist es, den vorhandenen https://docs.gradle.org/current/userguide/gradle_wrapper.html[Gradle Wrapper] zu nutzen.
+Es kann zwischen zwei Profilen gewählt werden: `dev` und `prod` . Ersteres verwendet eine in-memory H2 Datenbank und letztere PostgreSQL.
 
 [,bash]
-.API lokal ausführen
+.Anwendung mit Profil ausführen
 ----
-./gradlew bootRun
+# Mit Profil 'dev' ausführen
+./gradlew bootRun --args='--spring.profiles.active=dev'
+
+# Mit Profil 'prod'  ausführen
+./gradlew bootRun --args='--spring.profiles.active=prod'
 ----
 
-Wenn auf dem Rechner Gradle installiert sein sollte, kann auch einfach `gradle` genutzt werden. Wenn dieses einen Gradle Wrapper vorfindet, wird der Aufruf an diesen delegiert.
+NOTE:  Wenn auf dem Rechner Gradle installiert sein sollte, kann auch einfach `gradle` genutzt werden. Wenn dieses einen Gradle Wrapper vorfindet, wird der Aufruf an diesen delegiert.
+
+
+Danach stehen die REST Endpunkte unter `http://localhost:8080/api` zur Verfügung.
+
+== PostgreSQL
+Im Profil `prod` wird versucht auf eine lokale PostgreSQL zuzugreifen. Eine passende Instanz kann einfach via Docker
+erzeugt werden:
+
+[,bash]
+.PostgreSQL Instanz lokal erzeugen, stoppen, starten und löschen
+----
+# Docker Container mit PostgreSQL lokal erzeugen
+docker run -itd --name taskdb -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=taskdb postgres:17-alpine
+
+## Docker Container stoppen
+docker stop taskdb
+
+## Docker Container wieder starten
+docker start taskdb
+
+## Docker Container löschen
+docker stop taskdb && docker rm taskdb
+----
 
 Danach stehen die REST Endpunkte unter `http://localhost:8080/api` zur Verfügung.
 
