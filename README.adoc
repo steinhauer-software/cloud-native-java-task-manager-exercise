@@ -61,3 +61,46 @@ Es gibt unter link:./src/main/http/tasks-api.http[src/main/http/tasks-api.http] 
 HTTP Client direkt ausgeführt werden kann. Entweder einzeln oder komplett.
 
 Die Definition sollte auch dafür genutzt werden können, andere Clients - z.B. `curl`, https://hoppscotch.io[Hoppscotch] oder https://postman.com[Postman] - ebenfalls zu benutzen.
+
+== Docker und Docker Compose
+Das im Projekt enthaltene link:./Dockerfile[Dockerfile] kann dafür genutzt werden, die Anwendung in ein Docker-Image zu
+verpacken.
+
+Dafür kann folgender Befehl genutzt werden:
+
+[,bash]
+.Docker Image erstellen
+----
+docker build -t task-manager:latest .
+----
+
+Das "Tag" ist im obigen Beispiel `task-manager:latest`. Darüber kann dann die Anwendung via Docker ausgeführt werden:
+
+[,bash]
+.Docker Container aus Image erstellen und ausführen
+----
+docker run -it --rm -e SPRING_PROFILES_ACTIVE=dev task-manager:latest
+----
+
+Das `--rm` sorgt dafür, dass der Container nach dem Beenden (mittels Ctrl/Strg+C) wieder gelöscht wird. `-e` lässt uns
+Umgebungsvariablen setzen. Und `SPRING_PROFILES_ACTIVE` dient dazu, die gewünschten Profile - hier `dev` - zu aktivieren.
+
+Es gibt auch eine link:./docker-compose.yml[docker-compose.yml] im Repository. Diese illustriert, wie wir mehrere
+Docker Container orchestrieren könnten. Im verfügbaren Beispiel wird ein aktuelles Docker Image erstellt, darauf ein
+Container gebaut und mit den Umgebungsvariablen gestartet, die das Profile `prod` aktivieren und die korrekten Zugangsdaten
+für die PostgreSQL setzen, die wir in einem weiteren Container erstellen.
+Damit Daten nicht verloren gehen, wird das Docker Volume `postgres_data` erstellt und in den PostgreSQL Docker Container
+unter `/var/lib/postgresql/data` gemounted. Damit überleben die Daten, auch wenn wir zum Beispiel ein Versionsupdate
+durchführen würden.
+
+Um Docker Compose zu nutzen, führe im Wurzelverzeichnis des Projekt einfach folgendes aus:
+
+[,bash]
+.Anwendung und PostgreSQL mittels Docker Compose starten
+----
+docker compose up
+----
+
+Wenn beides im Hintergund laufen soll, setze noch den Parameter ´-d`.
+
+Ein `docker compose rm` löscht die Docker erzeugten Container. Das Docker Volume muss ggf. manuell gelöscht werden.
