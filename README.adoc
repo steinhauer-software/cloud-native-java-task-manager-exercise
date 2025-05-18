@@ -104,3 +104,22 @@ docker compose up
 Wenn beides im Hintergund laufen soll, setze noch den Parameter ´-d`.
 
 Ein `docker compose rm` löscht die Docker erzeugten Container. Das Docker Volume muss ggf. manuell gelöscht werden.
+
+== Kubernetes
+Im Verzeichnis link:./k8s[k8s] befinden sich außerdem Kubernetes (k8s) Descriptoren,
+
+Diese sind so aufgebaut, dass sowohl PostgreSQL als auch der Service in einem Cluster zur Verfügung gestellt werden.
+Für PostgreSQL werden _Secrets_ angelegt, die dafür verwendet werden, die PostgreSQL Instanz aufzusetzen als auch den Service so zu konfigurieren, dass er sich mit der Instanz verbinden kann.
+
+Die Secrets wurden mit folgendem Befehl erzeugt:
+
+[,bash]
+.Beispiel zum Erzeugen von Secrets
+----
+kubectl create secret generic postgres-secret \
+  --from-literal=postgres-user=postgres \
+  --from-literal=postgres-password=postgres \
+  --dry-run=client -o yaml > postgres-secret.yaml
+----
+
+Er gibt außerdem Skripte für link:deploy-to-minikube.bat[Windows] und für link:deploy-to-minikube.sh[richtige Betriebssysteme], um die Anwendung zu bauen, in ein Docker Image und dann ein lokales Kubernetes zu packen, welches mit https://minikube.sigs.k8s.io[Minikube] zur Verfügung gestellt wird.
