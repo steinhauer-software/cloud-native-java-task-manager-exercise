@@ -1,0 +1,35 @@
+= Task Manager - Ein Praxisbeispiel
+
+Dieses Projekt enthält eine simple Task Manager API. Aufgaben können erstellt, bearbeitet, als erledigt markiert und
+gelöscht werden.
+
+== Technologien & Anforderungen
+Es werden folgende Technologien verwendet:
+
+- Java 21
+- Gradle 8.13
+- Spring Boot 3.4.5
+- H2
+- Lombok
+
+Auch hier gilt: Sobald `java` auf dem System zur Verfügung steht, kann das Projekt gebaut und ausgeführt werden.
+Sogar unter Windows.
+
+== Wie ausführen?
+Am Einfachsten ist es, den vorhandenen https://docs.gradle.org/current/userguide/gradle_wrapper.html[Gradle Wrapper] zu nutzen.
+
+[,bash]
+.API lokal ausführen
+----
+./gradlew bootRun
+----
+
+Wenn auf dem Rechner Gradle installiert sein sollte, kann auch einfach `gradle` genutzt werden. Wenn dieses einen Gradle Wrapper vorfindet, wird der Aufruf an diesen delegiert.
+
+Danach stehen die REST Endpunkte unter `http://localhost:8080/api` zur Verfügung.
+
+== Beispiel Requests
+Es gibt unter link:./src/main/http/tasks-api.http[src/main/http/tasks-api.http] eine Definition, die im IntelliJ
+HTTP Client direkt ausgeführt werden kann. Entweder einzeln oder komplett.
+
+Die Definition sollte auch dafür genutzt werden können, andere Clients - z.B. `curl`, https://hoppscotch.io[Hoppscotch] oder https://postman.com[Postman] - ebenfalls zu benutzen.

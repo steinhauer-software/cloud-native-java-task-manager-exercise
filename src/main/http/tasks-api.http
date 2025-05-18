@@ -1,0 +1,66 @@
+### Variablen-Deklaration
+@baseUrl = http://localhost:8080/api/tasks
+@contentType = application/json
+
+### Alle Tasks abrufen
+GET {{baseUrl}}
+Accept: {{contentType}}
+
+### Task mit ID abrufen
+GET {{baseUrl}}/1
+Accept: {{contentType}}
+
+### Nicht-erledigte Tasks abrufen
+GET {{baseUrl}}/status?completed=false
+Accept: {{contentType}}
+
+### Erledigte Tasks abrufen
+GET {{baseUrl}}/status?completed=true
+Accept: {{contentType}}
+
+### Überfällige Tasks abrufen
+GET {{baseUrl}}/overdue
+Accept: {{contentType}}
+
+### Tasks nach Priorität abrufen (HIGH)
+GET {{baseUrl}}/priority/HIGH
+Accept: {{contentType}}
+
+### Tasks nach Priorität abrufen (MEDIUM)
+GET {{baseUrl}}/priority/MEDIUM
+Accept: {{contentType}}
+
+### Tasks nach Priorität abrufen (LOW)
+GET {{baseUrl}}/priority/LOW
+Accept: {{contentType}}
+
+### Neuen Task erstellen
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Neuer Task",
+  "description": "Beschreibung des neuen Tasks",
+  "completed": false,
+  "dueDate": "2025-06-01T12:00:00",
+  "priority": "MEDIUM"
+}
+
+### Task aktualisieren
+PUT {{baseUrl}}/1
+Content-Type: {{contentType}}
+
+{
+  "title": "Aktualisierter Task",
+  "description": "Aktualisierte Beschreibung",
+  "completed": false,
+  "dueDate": "2025-06-15T12:00:00",
+  "priority": "HIGH"
+}
+
+### Task als erledigt markieren
+PATCH {{baseUrl}}/1/complete
+Content-Type: {{contentType}}
+
+### Task löschen
+DELETE {{baseUrl}}/1
